@@ -9,7 +9,6 @@ export function ContactFilter() {
     ({ filteredContacts }) => filteredContacts
   );
   const valueFilter = useSelector(({ valueFilter }) => valueFilter);
-  console.log(valueFilter);
 
   const onChangeFilter = e => {
     dispatch(filterContacts(e.target.value));

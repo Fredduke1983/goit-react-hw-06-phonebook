@@ -1,7 +1,7 @@
 import { createSlice, configureStore } from '@reduxjs/toolkit';
 import { nanoid } from 'nanoid';
 
-const initialContacts = {
+const initialState = {
   contacts: [
     { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
     { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
@@ -16,16 +16,16 @@ const initialContacts = {
 
 export const contactsSlice = createSlice({
   name: 'contacts',
-  initialState: initialContacts,
+  initialState,
   reducers: {
-    addContact: (state, { payload }) => {
+    addContact: ({ contacts }, { payload: { valueName, valueNumber } }) => {
       return {
         contacts: [
-          ...state.contacts,
+          ...contacts,
           {
             id: nanoid(),
-            name: payload.valueName,
-            number: payload.valueNumber,
+            name: valueName,
+            number: valueNumber,
           },
         ],
         valueNumber: '',
@@ -33,43 +33,46 @@ export const contactsSlice = createSlice({
         valueFilter: '',
       };
     },
-    delContact: (state, { payload }) => {
-      const contactsDeleted = [...state.contacts].filter(contact => {
+    delContact: (
+      { contacts, valueNumber, valueName, valueFilter },
+      { payload }
+    ) => {
+      const contactsDeleted = [...contacts].filter(contact => {
         return !contact.id.includes(payload);
       });
       return {
         contacts: [...contactsDeleted],
-        valueNumber: state.valueNumber,
-        valueName: state.valueName,
-        valueFilter: state.valueFilter,
+        valueNumber,
+        valueName,
+        valueFilter,
       };
     },
-    filterContacts: (state, { payload }) => {
-      const filtered = [...state.contacts].filter(contact => {
+    filterContacts: ({ contacts, valueNumber, valueName }, { payload }) => {
+      const filtered = [...contacts].filter(contact => {
         return contact.name.toLowerCase().includes(payload);
       });
       return {
-        contacts: [...state.contacts],
+        contacts: [...contacts],
         filteredContacts: [...filtered],
         valueFilter: payload,
-        valueNumber: state.valueNumber,
-        valueName: state.valueName,
+        valueNumber,
+        valueName,
       };
     },
-    stateValueName: (state, { payload }) => {
+    stateValueName: ({ contacts, valueNumber, valueFilter }, { payload }) => {
       return {
-        contacts: [...state.contacts],
+        contacts: [...contacts],
         valueName: payload,
-        valueNumber: state.valueNumber,
-        valueFilter: state.valueFilter,
+        valueNumber,
+        valueFilter,
       };
     },
-    stateValueNumber: (state, { payload }) => {
+    stateValueNumber: ({ contacts, valueName, valueFilter }, { payload }) => {
       return {
-        contacts: [...state.contacts],
+        contacts: [...contacts],
         valueNumber: payload,
-        valueName: state.valueName,
-        valueFilter: state.valueFilter,
+        valueName,
+        valueFilter,
       };
     },
   },

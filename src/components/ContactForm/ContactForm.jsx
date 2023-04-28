@@ -14,7 +14,6 @@ export function ContactForm() {
   const contacts = useSelector(({ contacts }) => contacts);
 
   const onChange = ({ target: { name, value } }) => {
-    console.log(value);
     switch (name) {
       case 'name':
         dispatch(stateValueName(value));
@@ -36,11 +35,8 @@ export function ContactForm() {
       })
     ) {
       alert('Its allready in case');
-      // resetForm();
       return;
     }
-
-    // resetForm();
   };
 
   return (
