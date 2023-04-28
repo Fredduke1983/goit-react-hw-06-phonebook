@@ -5,7 +5,7 @@ import { ContactForm } from './ContactForm/ContactForm';
 import { ContactFilter } from './ContactFilter/ContactFilter';
 import { PhoneBookStyle } from './app.styled';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact, delContact } from 'store/store';
+import { addContact, delContact, filterContacts } from 'store/store';
 
 // let firstRunStorage = true;
 
@@ -58,6 +58,7 @@ export function App() {
       case 'number':
         setNumber(value);
         break;
+
       default:
         return;
     }
@@ -65,11 +66,8 @@ export function App() {
 
   const onChangeFilter = e => {
     setFilter(e.target.value);
-    setFilteredContacts(() => {
-      return contacts.filter(contact => {
-        return contact.name.toLowerCase().includes(e.target.value);
-      });
-    });
+
+    dispatch(filterContacts(e.target.value));
   };
 
   const onDeleteContact = e => {
@@ -90,8 +88,8 @@ export function App() {
         onChange={onChange}
         onChangeFilter={onChangeFilter}
         filter={filter}
-        filteredContacts={filteredContacts}
-        contacts={contacts}
+        filteredContacts={contacts}
+        // contacts={contacts}
         deleteContact={onDeleteContact}
       />
     </PhoneBookStyle>

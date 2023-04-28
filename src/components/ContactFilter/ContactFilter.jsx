@@ -1,15 +1,19 @@
 import PropTypes from 'prop-types';
 import { FilterDelBtn, FilterListItem } from './contactFilter.styled';
+import { useSelector } from 'react-redux';
 
 export function ContactFilter({
   onChangeFilter,
   filter,
-  filteredContacts,
-  contacts,
+
   deleteContact,
 }) {
-  function onFilterContacts(filterContacts) {
-    return filterContacts.map(contact => {
+  const contacts = useSelector(({ contacts }) => contacts);
+  const filteredContacts = useSelector(contacts => contacts.filteredContacts);
+  console.log(filteredContacts);
+
+  function onFilterContacts(filterContact) {
+    return filterContact.map(contact => {
       return (
         <FilterListItem id={contact.id} key={contact.id}>
           {contact.name}: {contact.number}
@@ -27,6 +31,7 @@ export function ContactFilter({
         placeholder="search"
         onChange={onChangeFilter}
         value={filter}
+        name="filter"
       ></input>
       <ul>
         {filter

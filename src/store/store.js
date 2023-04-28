@@ -8,6 +8,7 @@ const initialContacts = {
     { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
     { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
   ],
+  filteredContacts: [],
 };
 
 export const contactsSlice = createSlice({
@@ -30,10 +31,16 @@ export const contactsSlice = createSlice({
         contacts: [...contactsDeleted],
       };
     },
+    filterContacts: (state, { payload }) => {
+      const filtered = [...state.contacts].filter(contact => {
+        return contact.name.toLowerCase().includes(payload);
+      });
+      return { contacts: [...state.contacts], filteredContacts: [...filtered] };
+    },
   },
 });
 
-export const { addContact, delContact } = contactsSlice.actions;
+export const { addContact, delContact, filterContacts } = contactsSlice.actions;
 
 export const store = configureStore({
   reducer: contactsSlice.reducer,
