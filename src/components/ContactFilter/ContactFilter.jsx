@@ -1,23 +1,30 @@
-import PropTypes from 'prop-types';
 import { FilterDelBtn, FilterListItem } from './contactFilter.styled';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { delContact, filterContacts } from 'store/store';
 
-export function ContactFilter({
-  onChangeFilter,
-  filter,
-
-  deleteContact,
-}) {
+export function ContactFilter() {
+  const dispatch = useDispatch();
   const contacts = useSelector(({ contacts }) => contacts);
-  const filteredContacts = useSelector(contacts => contacts.filteredContacts);
-  console.log(filteredContacts);
+  const filteredContacts = useSelector(
+    ({ filteredContacts }) => filteredContacts
+  );
+  const valueFilter = useSelector(({ valueFilter }) => valueFilter);
+  console.log(valueFilter);
+
+  const onChangeFilter = e => {
+    dispatch(filterContacts(e.target.value));
+  };
+
+  const onDeleteContact = e => {
+    dispatch(delContact(e.target.id));
+  };
 
   function onFilterContacts(filterContact) {
     return filterContact.map(contact => {
       return (
         <FilterListItem id={contact.id} key={contact.id}>
           {contact.name}: {contact.number}
-          <FilterDelBtn onClick={deleteContact} id={contact.id}>
+          <FilterDelBtn onClick={onDeleteContact} id={contact.id}>
             delete
           </FilterDelBtn>
         </FilterListItem>
@@ -30,28 +37,14 @@ export function ContactFilter({
       <input
         placeholder="search"
         onChange={onChangeFilter}
-        value={filter}
+        value={valueFilter}
         name="filter"
       ></input>
       <ul>
-        {filter
+        {valueFilter
           ? onFilterContacts(filteredContacts)
           : onFilterContacts(contacts)}
       </ul>
     </>
   );
 }
-
-ContactFilter.propTypes = {
-  onChangeFilter: PropTypes.func,
-  filter: PropTypes.string,
-  filteredContacts: PropTypes.array,
-  contacts: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string,
-      id: PropTypes.string,
-      number: PropTypes.string,
-    }).isRequired
-  ),
-  deleteContact: PropTypes.func,
-};

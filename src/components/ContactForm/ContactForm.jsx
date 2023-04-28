@@ -1,12 +1,48 @@
-import PropTypes from 'prop-types';
 import {
   FormBtn,
   FormContact,
   InputContact,
   LabelContact,
 } from './contactForm.styled';
+import { useDispatch, useSelector } from 'react-redux';
+import { addContact, stateValueName, stateValueNumber } from 'store/store';
 
-export function ContactForm({ onSubmit, onChange, valueName, valueNumber }) {
+export function ContactForm() {
+  const dispatch = useDispatch();
+  const valueName = useSelector(({ valueName }) => valueName);
+  const valueNumber = useSelector(({ valueNumber }) => valueNumber);
+  const contacts = useSelector(({ contacts }) => contacts);
+
+  const onChange = ({ target: { name, value } }) => {
+    console.log(value);
+    switch (name) {
+      case 'name':
+        dispatch(stateValueName(value));
+        break;
+      case 'number':
+        dispatch(stateValueNumber(value));
+        break;
+
+      default:
+        return;
+    }
+  };
+  const onSubmit = e => {
+    e.preventDefault();
+    dispatch(addContact({ valueName, valueNumber }));
+    if (
+      contacts.find(({ name }) => {
+        return name === valueName;
+      })
+    ) {
+      alert('Its allready in case');
+      // resetForm();
+      return;
+    }
+
+    // resetForm();
+  };
+
   return (
     <FormContact onSubmit={onSubmit}>
       <LabelContact>
@@ -35,10 +71,3 @@ export function ContactForm({ onSubmit, onChange, valueName, valueNumber }) {
     </FormContact>
   );
 }
-
-ContactForm.propTypes = {
-  onSubmit: PropTypes.func,
-  onChange: PropTypes.func,
-  valueName: PropTypes.string,
-  valueNumber: PropTypes.string,
-};

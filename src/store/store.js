@@ -9,6 +9,9 @@ const initialContacts = {
     { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
   ],
   filteredContacts: [],
+  valueFilter: '',
+  valueName: '',
+  valueNumber: '',
 };
 
 export const contactsSlice = createSlice({
@@ -19,8 +22,15 @@ export const contactsSlice = createSlice({
       return {
         contacts: [
           ...state.contacts,
-          { id: nanoid(), name: payload.writeName, number: payload.number },
+          {
+            id: nanoid(),
+            name: payload.valueName,
+            number: payload.valueNumber,
+          },
         ],
+        valueNumber: '',
+        valueName: '',
+        valueFilter: '',
       };
     },
     delContact: (state, { payload }) => {
@@ -29,18 +39,49 @@ export const contactsSlice = createSlice({
       });
       return {
         contacts: [...contactsDeleted],
+        valueNumber: state.valueNumber,
+        valueName: state.valueName,
+        valueFilter: state.valueFilter,
       };
     },
     filterContacts: (state, { payload }) => {
       const filtered = [...state.contacts].filter(contact => {
         return contact.name.toLowerCase().includes(payload);
       });
-      return { contacts: [...state.contacts], filteredContacts: [...filtered] };
+      return {
+        contacts: [...state.contacts],
+        filteredContacts: [...filtered],
+        valueFilter: payload,
+        valueNumber: state.valueNumber,
+        valueName: state.valueName,
+      };
+    },
+    stateValueName: (state, { payload }) => {
+      return {
+        contacts: [...state.contacts],
+        valueName: payload,
+        valueNumber: state.valueNumber,
+        valueFilter: state.valueFilter,
+      };
+    },
+    stateValueNumber: (state, { payload }) => {
+      return {
+        contacts: [...state.contacts],
+        valueNumber: payload,
+        valueName: state.valueName,
+        valueFilter: state.valueFilter,
+      };
     },
   },
 });
 
-export const { addContact, delContact, filterContacts } = contactsSlice.actions;
+export const {
+  addContact,
+  delContact,
+  filterContacts,
+  stateValueName,
+  stateValueNumber,
+} = contactsSlice.actions;
 
 export const store = configureStore({
   reducer: contactsSlice.reducer,
