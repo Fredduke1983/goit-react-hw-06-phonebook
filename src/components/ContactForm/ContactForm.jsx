@@ -12,12 +12,15 @@ export function ContactForm() {
   const contacts = useSelector(({ contacts }) => contacts);
 
   const onSubmit = e => {
+    const {
+      target: { name, number },
+    } = e;
     e.preventDefault();
 
-    const valueName = e.target.name.value;
-    const valueNumber = e.target.number.value;
-    e.target.name.value = '';
-    e.target.number.value = '';
+    const valueName = name.value;
+    const valueNumber = number.value;
+    name.value = '';
+    number.value = '';
     if (
       contacts.find(({ name }) => {
         return name === valueName;
