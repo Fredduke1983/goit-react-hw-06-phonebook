@@ -1,5 +1,13 @@
 import { createSlice, configureStore } from '@reduxjs/toolkit';
 import { nanoid } from 'nanoid';
+import { persistStore, persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+
+const persistConfig = {
+  key: 'root',
+  storage,
+  whitelist: ['contacts'],
+};
 
 const initialState = {
   contacts: [
@@ -48,29 +56,15 @@ export const contactsSlice = createSlice({
         valueFilter: payload,
       };
     },
-    stateValueName: ({ contacts, valueFilter }) => {
-      return {
-        contacts: [...contacts],
-        valueFilter: '',
-      };
-    },
-    stateValueNumber: ({ contacts, valueFilter }) => {
-      return {
-        contacts: [...contacts],
-        valueFilter: '',
-      };
-    },
   },
 });
 
-export const {
-  addContact,
-  delContact,
-  filterContacts,
-  stateValueName,
-  stateValueNumber,
-} = contactsSlice.actions;
+export const { addContact, delContact, filterContacts } = contactsSlice.actions;
 
-export const store = configureStore({
-  reducer: contactsSlice.reducer,
+const persistedReducer = persistReducer(persistConfig, contactsSlice.reducer);
+
+const store = configureStore({
+  reducer: persistedReducer,
 });
+let persistor = persistStore(store);
+export { store, persistor };
