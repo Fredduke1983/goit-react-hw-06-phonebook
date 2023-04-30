@@ -10,8 +10,6 @@ const initialState = {
   ],
   filteredContacts: [],
   valueFilter: '',
-  valueName: '',
-  valueNumber: '',
 };
 
 export const contactsSlice = createSlice({
@@ -28,26 +26,19 @@ export const contactsSlice = createSlice({
             number: valueNumber,
           },
         ],
-        valueNumber: '',
-        valueName: '',
         valueFilter: '',
       };
     },
-    delContact: (
-      { contacts, valueNumber, valueName, valueFilter },
-      { payload }
-    ) => {
+    delContact: ({ contacts }, { payload }) => {
       const contactsDeleted = [...contacts].filter(contact => {
         return !contact.id.includes(payload);
       });
       return {
         contacts: [...contactsDeleted],
-        valueNumber,
-        valueName,
-        valueFilter,
+        valueFilter: '',
       };
     },
-    filterContacts: ({ contacts, valueNumber, valueName }, { payload }) => {
+    filterContacts: ({ contacts }, { payload }) => {
       const filtered = [...contacts].filter(contact => {
         return contact.name.toLowerCase().includes(payload);
       });
@@ -55,24 +46,18 @@ export const contactsSlice = createSlice({
         contacts: [...contacts],
         filteredContacts: [...filtered],
         valueFilter: payload,
-        valueNumber,
-        valueName,
       };
     },
-    stateValueName: ({ contacts, valueNumber, valueFilter }, { payload }) => {
+    stateValueName: ({ contacts, valueFilter }) => {
       return {
         contacts: [...contacts],
-        valueName: payload,
-        valueNumber,
-        valueFilter,
+        valueFilter: '',
       };
     },
-    stateValueNumber: ({ contacts, valueName, valueFilter }, { payload }) => {
+    stateValueNumber: ({ contacts, valueFilter }) => {
       return {
         contacts: [...contacts],
-        valueNumber: payload,
-        valueName,
-        valueFilter,
+        valueFilter: '',
       };
     },
   },
