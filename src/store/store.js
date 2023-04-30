@@ -1,6 +1,15 @@
 import { createSlice, configureStore } from '@reduxjs/toolkit';
 import { nanoid } from 'nanoid';
-import { persistStore, persistReducer } from 'redux-persist';
+import {
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
 const persistConfig = {
@@ -65,6 +74,12 @@ const persistedReducer = persistReducer(persistConfig, contactsSlice.reducer);
 
 const store = configureStore({
   reducer: persistedReducer,
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
 });
 let persistor = persistStore(store);
 export { store, persistor };
